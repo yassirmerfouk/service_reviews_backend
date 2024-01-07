@@ -9,12 +9,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="accounts_microservice" />
         <module name="services_microservice" />
+        <module name="reviews_microservice" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="accounts_microservice" options="-parameters" />
+      <module name="reviews_microservice" options="-parameters" />
       <module name="services_microservice" options="-parameters" />
     </option>
   </component>

@@ -45,10 +45,25 @@ public class ServiceController {
         serviceService.deleteService(id);
     }
 
-    @GetMapping("/category/{categoryId}")
+    @PostMapping(path = "/{id}/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addImageToService(
+            @PathVariable Long id,
+            @RequestPart(name = "image", required = true) MultipartFile image
+    ){
+        serviceService.addImageToService(id,image);
+    }
+
+    @GetMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public List<ServiceResponseDTO> getServicesByCategoryId(@PathVariable Long categoryId){
         return serviceService.getServicesByCategoryId(categoryId);
+    }
+
+    @GetMapping("/accounts/business/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ServiceResponseDTO> getServicesByBusinessAccountId(@PathVariable Long accountId){
+        return serviceService.getServicesByBusinessAccountId(accountId);
     }
 
 }

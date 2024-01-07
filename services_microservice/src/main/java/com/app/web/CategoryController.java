@@ -5,6 +5,7 @@ import com.app.dto.CategoryResponseDTO;
 import com.app.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public CategoryResponseDTO addCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
         return categoryService.addCategory(categoryRequestDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public CategoryResponseDTO updateCategory(
             @PathVariable Long id,
             @RequestBody CategoryRequestDTO categoryRequestDTO){
@@ -32,6 +35,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public void deleteCategory(@PathVariable Long id){
         categoryService.deleteCategory(id);
     }

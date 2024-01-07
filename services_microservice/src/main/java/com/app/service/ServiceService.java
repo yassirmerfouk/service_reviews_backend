@@ -67,6 +67,19 @@ public class ServiceService {
         );
     }
 
+    public void addImageToService(Long id, MultipartFile image){
+        Service service = serviceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Service "+id+ " not found"));
+        if(image != null && !image.isEmpty()){
+            String storageName = fileStorageService.saveFile(image);
+            ServiceImage serviceImage = ServiceImage.builder()
+                    .storageName(storageName)
+                    .service(service)
+                    .build();
+            serviceImageRepository.save(serviceImage);
+        }
+    }
+
     public ServiceResponseDTO getService(Long id){
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service "+id+ " not found"));
@@ -87,6 +100,16 @@ public class ServiceService {
 
     public List<ServiceResponseDTO> getServicesByCategoryId(Long categoryId){
         return serviceRepository.findByCategoryId(categoryId).stream()
+                .map(service -> {
+                    BusinessAccountResponseDTO businessAccountResponseDTO =
+                            businessAccountClient.getBusinessAccount(service.getBusinessAccountId());
+                    return serviceMapper.toServiceResponseDTO(service, businessAccountResponseDTO);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<ServiceResponseDTO> getServicesByBusinessAccountId(Long businessAccountId){
+        return serviceRepository.findByBusinessAccountId(businessAccountId).stream()
                 .map(service -> {
                     BusinessAccountResponseDTO businessAccountResponseDTO =
                             businessAccountClient.getBusinessAccount(service.getBusinessAccountId());

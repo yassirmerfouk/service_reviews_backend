@@ -26,7 +26,7 @@ public class JwtService {
                 .issuedAt(instant)
                 .expiresAt(instant.plus(60, ChronoUnit.MINUTES))
                 .claim("userId", id)
-                .claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .claim("scope", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" ")))
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
     }

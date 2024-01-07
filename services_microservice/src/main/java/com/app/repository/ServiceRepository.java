@@ -8,4 +8,5 @@ import java.util.List;
 public interface ServiceRepository extends JpaRepository<Service,Long> {
     boolean existsByCategoryId(Long categoryId);
     List<Service> findByCategoryId(Long categoryId);
+    List<Service> findByBusinessAccountId(Long businessAccountId);
 }
