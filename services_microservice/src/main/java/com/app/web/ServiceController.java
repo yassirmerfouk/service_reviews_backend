@@ -1,7 +1,6 @@
 package com.app.web;
 
-import com.app.dto.ServiceRequestDto;
-import com.app.dto.ServiceResponseDTO;
+import com.app.dto.*;
 import com.app.service.ServiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,6 +63,24 @@ public class ServiceController {
     @ResponseStatus(HttpStatus.OK)
     public List<ServiceResponseDTO> getServicesByBusinessAccountId(@PathVariable Long accountId){
         return serviceService.getServicesByBusinessAccountId(accountId);
+    }
+
+    @PostMapping("/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReviewToService(@RequestBody ReviewRequestDTO reviewRequestDTO){
+        serviceService.addReviewToService(reviewRequestDTO);
+    }
+
+    @GetMapping("/{id}/reviews")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReviewResponseDTO> getServiceReviews(@PathVariable Long id){
+        return serviceService.getServiceReviews(id);
+    }
+
+    @PostMapping("/{id}/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateServiceAverage(@PathVariable Long id, @RequestBody UpdateAverageRequestDTO updateAverageRequestDTO){
+        serviceService.updateServiceAverage(id, updateAverageRequestDTO);
     }
 
 }

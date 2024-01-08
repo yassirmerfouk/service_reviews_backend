@@ -10,6 +10,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -30,6 +31,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -40,6 +44,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
        return http
+               .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.OPTIONS).permitAll())
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -98,5 +103,17 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider){
         return new ProviderManager(authenticationProvider);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource =
+                new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        return urlBasedCorsConfigurationSource;
     }
 }

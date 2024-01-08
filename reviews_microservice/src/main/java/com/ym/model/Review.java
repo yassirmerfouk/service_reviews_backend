@@ -15,6 +15,6 @@ public class Review {
     private Long id;
     private Long serviceId;
     private Long personnelAccountId;
-    private double grade;
+    private int grade;
     private String comment;
 }

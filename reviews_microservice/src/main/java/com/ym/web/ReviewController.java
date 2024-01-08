@@ -1,0 +1,23 @@
+package com.ym.web;
+
+import com.ym.dto.ReviewResponseDTO;
+import com.ym.service.ReviewService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/reviews")
+@AllArgsConstructor
+public class ReviewController {
+
+    private ReviewService reviewService;
+
+    @GetMapping("/service/{serviceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReviewResponseDTO> getReviewsByServiceId(@PathVariable Long serviceId){
+        return reviewService.getReviewsByServiceId(serviceId);
+    }
+}
