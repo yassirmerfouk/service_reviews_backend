@@ -18,7 +18,7 @@ public class ServiceMapper {
 
     @Autowired
     private CategoryMapper categoryMapper;
-    private String gatewayUrl = "http://localhost:8082/";
+    private String url = "http://localhost:8080/SERVICES-MICROSERVICE/services/";
 
     public Service toService(ServiceRequestDto serviceRequestDto){
         Service service = new Service();
@@ -33,7 +33,7 @@ public class ServiceMapper {
         serviceResponseDTO.setCategoryResponseDTO(categoryMapper.toCategoryResponseDTO(service.getCategory()));
         serviceResponseDTO.setImagesUrls(
                 service.getServiceImages().stream()
-                        .map(x -> gatewayUrl + "images/" + x.getStorageName() )
+                        .map(x -> url + "images/" + x.getStorageName() )
                         .collect(Collectors.toList())
         );
         serviceResponseDTO.setBusinessAccountResponseDTO(businessAccountResponseDTO);

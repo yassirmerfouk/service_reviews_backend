@@ -3,8 +3,12 @@ package com.app.web;
 import com.app.dto.*;
 import com.app.service.ServiceService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,6 +85,14 @@ public class ServiceController {
     @ResponseStatus(HttpStatus.OK)
     public void updateServiceAverage(@PathVariable Long id, @RequestBody UpdateAverageRequestDTO updateAverageRequestDTO){
         serviceService.updateServiceAverage(id, updateAverageRequestDTO);
+    }
+
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<Resource> getServiceImage(@PathVariable String imageName){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentDispositionFormData("attachment", imageName);
+        return new ResponseEntity<Resource>(serviceService.getServiceImage(imageName), headers, HttpStatus.OK);
     }
 
 }

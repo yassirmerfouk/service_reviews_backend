@@ -12,8 +12,11 @@ import com.app.repository.CategoryRepository;
 import com.app.repository.ServiceImageRepository;
 import com.app.repository.ServiceRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,5 +144,18 @@ public class ServiceService {
             review.setPersonnelAccountResponseDTO(personnelAccountResponseDTO);
         });
         return reviews;
+    }
+
+    public Resource getServiceImage(String imageName){
+        try{
+            Path image = fileStorageService.uploadPath.resolve(imageName);
+            Resource resource = new UrlResource(image.toUri());
+            if(resource.exists() && resource.isReadable())
+                return resource;
+            else
+                throw new RuntimeException("could not read the file");
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

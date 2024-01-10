@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 public class FileStorageService {
-    Path uploadPath = Paths.get("services_microservice/src/main/resources/static/images");
+    public Path uploadPath = Paths.get("services_microservice/images");
 
     @PostConstruct
     public void init() {
