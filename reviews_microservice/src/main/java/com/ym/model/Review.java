@@ -1,9 +1,6 @@
 package com.ym.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -16,5 +13,6 @@ public class Review {
     private Long serviceId;
     private Long personnelAccountId;
     private int grade;
+    @Column(length = 1000)
     private String comment;
 }

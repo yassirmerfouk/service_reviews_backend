@@ -14,7 +14,9 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(length = 1000)
     private String shortDescription;
+    @Column(length = 2000)
     private String longDescription;
     private String contactEmail;
     private String contactPhone;

@@ -21,4 +21,8 @@ public class ReviewService {
                 .map(review -> reviewMapper.toReviewResponseDTO(review))
                 .collect(Collectors.toList());
     }
+
+    public boolean personnelAccountDidReview(Long personnelAccountId, Long serviceId){
+        return reviewRepository.existsByServiceIdAndPersonnelAccountId(serviceId, personnelAccountId);
+    }
 }

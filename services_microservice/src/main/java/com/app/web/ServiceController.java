@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/services")
+@CrossOrigin("*")
 @AllArgsConstructor
 public class ServiceController {
 
@@ -27,6 +28,7 @@ public class ServiceController {
             @RequestPart(name = "service") ServiceRequestDto serviceRequestDto,
             @RequestPart(name = "image", required = false)MultipartFile image
             ){
+        /*System.out.println(image.getName());*/
         return serviceService.addService(serviceRequestDto, image);
     }
 

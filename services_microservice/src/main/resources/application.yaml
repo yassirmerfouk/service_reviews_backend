@@ -2,3 +2,5 @@ spring:
   cloud:
     discovery:
       enabled: true
+server:
+  forward-headers-strategy: framework

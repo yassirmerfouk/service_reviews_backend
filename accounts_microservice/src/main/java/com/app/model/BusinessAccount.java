@@ -14,7 +14,7 @@ public class BusinessAccount extends User{
     @Column
     private String address;
     private String employeesNumber;
-    @Column(length = 500)
+    @Column(length = 2000)
     private String description;
 
     @Builder
