@@ -9,7 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
 @AllArgsConstructor
 public class AuthController {
 
@@ -19,4 +18,5 @@ public class AuthController {
     public Map<String, String> login(@RequestBody AuthDTO authDTO){
         return authService.login(authDTO);
     }
+
 }

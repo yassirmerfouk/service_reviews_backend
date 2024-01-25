@@ -19,7 +19,7 @@ public class QueueConsumer {
     @Autowired
     private ServiceClient serviceClient;
 
-    @RabbitListener(queues = {"${queue.name}"})
+    @RabbitListener(queues = {"${queue.reviews}"})
     public void receive(@Payload String fileBody) {
         System.out.println("Message " + fileBody);
         String[] composers = fileBody.split(";",4);

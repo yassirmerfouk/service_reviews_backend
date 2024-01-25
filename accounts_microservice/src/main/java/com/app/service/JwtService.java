@@ -3,9 +3,8 @@ package com.app.service;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,6 +16,8 @@ import java.util.stream.Collectors;
 public class JwtService {
 
     private JwtEncoder jwtEncoder;
+    private JwtDecoder jwtDecoder;
+    private UserDetailsService userDetailsService;
 
     public String generateAccessToken(UserDetails userDetails, Long id){
         Instant instant = Instant.now();
@@ -40,5 +41,12 @@ public class JwtService {
                 .expiresAt(instant.plus(1, ChronoUnit.DAYS))
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+    }
+
+    public String refreshToken(String accessToken) throws JwtException{
+          Jwt jwt = jwtDecoder.decode(accessToken);
+          String subject = jwt.getSubject();
+          UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+          return generateRefreshToken(userDetails);
     }
 }

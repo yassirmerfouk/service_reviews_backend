@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,5 +31,16 @@ public class AuthService {
         if(authDTO.isWithRefreshToken())
             tokens.put("refreshToken", jwtService.generateRefreshToken((UserDetails) authentication.getPrincipal()));
         return tokens;
+    }
+
+    public Map<String, String> refreshToken(String refreshToken){
+        try{
+            return Map.of(
+                    "accessToken", jwtService.refreshToken(refreshToken),
+                    "refreshToken", refreshToken
+            );
+        }catch(JwtException e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

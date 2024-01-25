@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,19 +17,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/services")
-@CrossOrigin("*")
 @AllArgsConstructor
 public class ServiceController {
 
     private ServiceService serviceService;
 
+    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponseDTO addService(
             @RequestPart(name = "service") ServiceRequestDto serviceRequestDto,
             @RequestPart(name = "image", required = false)MultipartFile image
             ){
-        /*System.out.println(image.getName());*/
         return serviceService.addService(serviceRequestDto, image);
     }
 
@@ -44,12 +44,14 @@ public class ServiceController {
         return serviceService.getService(id);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteService(@PathVariable Long id){
         serviceService.deleteService(id);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
     @PostMapping(path = "/{id}/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void addImageToService(
@@ -65,6 +67,7 @@ public class ServiceController {
         return serviceService.getServicesByCategoryId(categoryId);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
     @GetMapping("/accounts/business/{accountId}")
     @ResponseStatus(HttpStatus.OK)
     public List<ServiceResponseDTO> getServicesByBusinessAccountId(@PathVariable Long accountId){

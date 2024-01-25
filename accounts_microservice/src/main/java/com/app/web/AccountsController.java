@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin("*")
 @AllArgsConstructor
 public class AccountsController {
 

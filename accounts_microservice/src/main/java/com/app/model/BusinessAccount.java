@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor @Setter @Getter
 public class BusinessAccount extends User{
     private String name;
-    @Column
     private String address;
     private String employeesNumber;
     @Column(length = 2000)
