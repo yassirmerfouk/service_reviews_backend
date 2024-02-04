@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.dto.PersonnelAccountRequestDTO;
 import com.app.dto.PersonnelAccountResponseDTO;
+import com.app.exception.CustomException;
 import com.app.mapper.AccountMapper;
 import com.app.model.PersonnelAccount;
 import com.app.model.Role;
@@ -25,7 +26,7 @@ public class PersonnelAccountService {
 
     public PersonnelAccountResponseDTO addPersonnelAccount(PersonnelAccountRequestDTO personnelAccountRequestDTO){
         if(userRepository.existsByEmail(personnelAccountRequestDTO.getEmail()))
-            throw new RuntimeException("Email already exist");
+            throw new CustomException("Email already exist");
         PersonnelAccount personnelAccount = accountMapper.toPersonnelAccount(personnelAccountRequestDTO);
         personnelAccount.setPassword(passwordEncoder.encode(personnelAccount.getPassword()));
         personnelAccount.setRole(Role.PERSONNEL);
@@ -41,7 +42,7 @@ public class PersonnelAccountService {
 
     public PersonnelAccountResponseDTO getPersonnelAccount(Long id){
         PersonnelAccount personnelAccount = personnelAccountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("APersonnel account " +id+ " not found"));
+                .orElseThrow(() -> new CustomException("Personnel account " +id+ " not found"));
         return accountMapper.toPersonnelAccountResponseDTO(personnelAccount);
     }
 }

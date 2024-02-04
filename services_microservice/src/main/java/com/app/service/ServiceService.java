@@ -1,6 +1,7 @@
 package com.app.service;
 
 import com.app.dto.*;
+import com.app.exception.CustomException;
 import com.app.http.AccountClient;
 import com.app.http.ReviewClient;
 import com.app.mapper.ServiceMapper;
@@ -39,7 +40,7 @@ public class ServiceService {
     ){
         Service service = serviceMapper.toService(serviceRequestDto);
         Category category = categoryRepository.findById(serviceRequestDto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category " +serviceRequestDto.getCategoryId()+ " not found"));
+                .orElseThrow(() -> new CustomException("Category " +serviceRequestDto.getCategoryId()+ " not found"));
         BusinessAccountResponseDTO businessAccountResponseDTO
                 = accountClient.getBusinessAccount(service.getBusinessAccountId());
         service.setCategory(category);
@@ -60,16 +61,16 @@ public class ServiceService {
 
     public void deleteService(Long id){
         Service service = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service "+id+ " not found"));
+                .orElseThrow(() -> new CustomException("Service "+id+ " not found"));
         serviceRepository.delete(service);
-        service.getServiceImages().stream().forEach(
+        service.getServiceImages().forEach(
                 image -> fileStorageService.deleteFile(image.getStorageName())
         );
     }
 
     public void addImageToService(Long id, MultipartFile image){
         Service service = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service "+id+ " not found"));
+                .orElseThrow(() -> new CustomException("Service "+id+ " not found"));
         if(image != null && !image.isEmpty()){
             String storageName = fileStorageService.saveFile(image);
             ServiceImage serviceImage = ServiceImage.builder()
@@ -82,7 +83,7 @@ public class ServiceService {
 
     public ServiceResponseDTO getService(Long id){
         Service service = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service "+id+ " not found"));
+                .orElseThrow(() -> new CustomException("Service "+id+ " not found"));
         BusinessAccountResponseDTO businessAccountResponseDTO =
                 accountClient.getBusinessAccount(service.getBusinessAccountId());
         return serviceMapper.toServiceResponseDTO(service, businessAccountResponseDTO);
@@ -119,26 +120,16 @@ public class ServiceService {
     }
 
     public void addReviewToService(ReviewRequestDTO reviewRequestDTO){
-        String message = reviewRequestDTO.getServiceId() + ";" + reviewRequestDTO.getPersonnelAccountId()
-                + ";" + reviewRequestDTO.getGrade() + ";" + reviewRequestDTO.getComment();
+        String message = reviewRequestDTO.toString();
         queueProducer.send(message);
-    }
-
-    public void updateServiceAverage(Long id, UpdateAverageRequestDTO updateAverageRequestDTO){
-        Service service = serviceRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Service " +id+ " not found")
-        );
-        service.setReviewsAverage(updateAverageRequestDTO.getAverage());
-        service.setReviewsNumbers(updateAverageRequestDTO.getTotal());
-        serviceRepository.save(service);
     }
 
     public List<ReviewResponseDTO> getServiceReviews(Long id){
         Service service = serviceRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Service " +id+ " not found")
+                () -> new CustomException("Service " +id+ " not found")
         );
         List<ReviewResponseDTO> reviews = reviewClient.getServiceReviews(service.getId());
-        reviews.stream().forEach(review -> {
+        reviews.forEach(review -> {
             PersonnelAccountResponseDTO personnelAccountResponseDTO =
                     accountClient.getPersonnelAccount(review.getPersonnelAccountId());
             review.setPersonnelAccountResponseDTO(personnelAccountResponseDTO);

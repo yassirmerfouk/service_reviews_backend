@@ -18,7 +18,7 @@ public class ServiceMapper {
 
     @Autowired
     private CategoryMapper categoryMapper;
-    private String url = "http://localhost:8080/SERVICES-MICROSERVICE/services/";
+    private final String url = "http://localhost:8080/SERVICES-MICROSERVICE/services/";
 
     public Service toService(ServiceRequestDto serviceRequestDto){
         Service service = new Service();

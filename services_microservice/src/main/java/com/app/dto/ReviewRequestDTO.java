@@ -9,4 +9,10 @@ public class ReviewRequestDTO {
     private Long personnelAccountId;
     private int grade;
     private String comment;
+
+    @Override
+    public String toString() {
+        return serviceId + ";" + personnelAccountId
+                + ";" + grade + ";" + comment;
+    }
 }

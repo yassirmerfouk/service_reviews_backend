@@ -1,5 +1,8 @@
 package com.app.service;
 
+import com.app.config.SecurityUser;
+import com.app.model.User;
+import com.app.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,34 +22,32 @@ public class JwtService {
     private JwtDecoder jwtDecoder;
     private UserDetailsService userDetailsService;
 
-    public String generateAccessToken(UserDetails userDetails, Long id){
+    public String generateAccessToken(SecurityUser securityUser) {
         Instant instant = Instant.now();
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                .subject(userDetails.getUsername())
-                .issuer("SERVICE-REVIEWS")
+                .subject(securityUser.getUsername())
                 .issuedAt(instant)
                 .expiresAt(instant.plus(60, ChronoUnit.MINUTES))
-                .claim("userId", id)
-                .claim("scope", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" ")))
+                .claim("userId", securityUser.getUser().getId())
+                .claim("scope", securityUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" ")))
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
     }
 
-    public String generateRefreshToken(UserDetails userDetails){
+    public String generateRefreshToken(SecurityUser securityUser) {
         Instant instant = Instant.now();
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                .subject(userDetails.getUsername())
-                .issuer("SERVICE-REVIEWS")
+                .subject(securityUser.getUsername())
                 .issuedAt(instant)
                 .expiresAt(instant.plus(1, ChronoUnit.DAYS))
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
     }
 
-    public String refreshToken(String accessToken) throws JwtException{
-          Jwt jwt = jwtDecoder.decode(accessToken);
-          String subject = jwt.getSubject();
-          UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
-          return generateRefreshToken(userDetails);
+    public String refreshToken(String refreshToken) throws JwtException {
+        Jwt jwt = jwtDecoder.decode(refreshToken);
+        String subject = jwt.getSubject();
+        SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(subject);
+        return generateAccessToken(securityUser);
     }
 }

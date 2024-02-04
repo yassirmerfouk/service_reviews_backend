@@ -76,11 +76,7 @@ public class SecurityConfig {
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 User user = userRepository.findByEmail(username)
                         .orElseThrow(() -> new UsernameNotFoundException("email not found"));
-                return new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        List.of(new SimpleGrantedAuthority(user.getRole().toString()))
-                );
+                return new SecurityUser(user);
             }
         };
     }

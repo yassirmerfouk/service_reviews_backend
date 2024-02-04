@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.dto.BusinessAccountRequestDTO;
 import com.app.dto.BusinessAccountResponseDTO;
+import com.app.exception.CustomException;
 import com.app.mapper.AccountMapper;
 import com.app.model.BusinessAccount;
 import com.app.model.Role;
@@ -25,7 +26,7 @@ public class BusinessAccountService {
 
     public BusinessAccountResponseDTO addBusinessAccount(BusinessAccountRequestDTO businessAccountRequestDTO){
         if(userRepository.existsByEmail(businessAccountRequestDTO.getEmail()))
-            throw new RuntimeException("Email already exist");
+            throw new CustomException("Email already exist");
         BusinessAccount businessAccount = accountMapper.toBusinessAccount(businessAccountRequestDTO);
         businessAccount.setPassword(passwordEncoder.encode(businessAccount.getPassword()));
         businessAccount.setRole(Role.BUSINESS);
@@ -41,7 +42,7 @@ public class BusinessAccountService {
 
     public BusinessAccountResponseDTO getBusinessAccount(Long id){
         BusinessAccount businessAccount = businessAccountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Businness account "+id+ " not found"));
+                .orElseThrow(() -> new CustomException("Business account "+id+ " not found"));
         return accountMapper.toBusinessAccountResponseDTO(businessAccount);
     }
 

@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.dto.CategoryRequestDTO;
 import com.app.dto.CategoryResponseDTO;
+import com.app.exception.CustomException;
 import com.app.mapper.CategoryMapper;
 import com.app.model.Category;
 import com.app.repository.CategoryRepository;
@@ -28,7 +29,7 @@ public class CategoryService {
 
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO){
         if(!categoryRepository.existsById(id))
-            throw new RuntimeException("Category " +id+ " not found");
+            throw new CustomException("Category " +id+ " not found");
         Category category = categoryMapper.toCategory(categoryRequestDTO);
         category.setId(id);
         categoryRepository.save(category);
@@ -37,16 +38,16 @@ public class CategoryService {
 
     public void deleteCategory(Long id){
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category " +id+ " not found"));
+                .orElseThrow(() -> new CustomException("Category " +id+ " not found"));
         // Check if category has services
         if(serviceRepository.existsByCategoryId(id))
-            throw new RuntimeException("Could not delete category " + id + ", has services");
+            throw new CustomException("Could not delete category " + id + ", has services");
         categoryRepository.delete(category);
     }
 
     public CategoryResponseDTO getCategory(Long id){
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category " +id+ " not found"));
+                .orElseThrow(() -> new CustomException("Category " +id+ " not found"));
         return categoryMapper.toCategoryResponseDTO(category);
     }
 

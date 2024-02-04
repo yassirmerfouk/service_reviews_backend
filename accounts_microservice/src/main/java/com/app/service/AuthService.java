@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.config.SecurityUser;
 import com.app.dto.AuthDTO;
 import com.app.model.User;
 import com.app.repository.UserRepository;
@@ -25,11 +26,11 @@ public class AuthService {
     public Map<String, String> login(AuthDTO authDTO){
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authDTO.getEmail(), authDTO.getPassword()));
-        User user = userRepository.findByEmail(((UserDetails) authentication.getPrincipal()).getUsername()).get();
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", jwtService.generateAccessToken((UserDetails) authentication.getPrincipal(), user.getId()));
+        tokens.put("accessToken", jwtService.generateAccessToken(securityUser));
         if(authDTO.isWithRefreshToken())
-            tokens.put("refreshToken", jwtService.generateRefreshToken((UserDetails) authentication.getPrincipal()));
+            tokens.put("refreshToken", jwtService.generateRefreshToken(securityUser));
         return tokens;
     }
 

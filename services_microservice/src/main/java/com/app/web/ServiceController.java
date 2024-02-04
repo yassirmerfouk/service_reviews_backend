@@ -86,12 +86,6 @@ public class ServiceController {
         return serviceService.getServiceReviews(id);
     }
 
-    @PostMapping("/{id}/update")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateServiceAverage(@PathVariable Long id, @RequestBody UpdateAverageRequestDTO updateAverageRequestDTO){
-        serviceService.updateServiceAverage(id, updateAverageRequestDTO);
-    }
-
     @GetMapping("/images/{imageName}")
     public ResponseEntity<Resource> getServiceImage(@PathVariable String imageName){
         HttpHeaders headers = new HttpHeaders();
