@@ -48,7 +48,7 @@ public class ServiceService {
         service.setReviewsNumbers(0);
         serviceRepository.save(service);
         if(image != null && !image.isEmpty()){
-            String storageName = fileStorageService.saveFile(image);
+            String storageName = fileStorageService.uploadFileToCloud(image);
                 ServiceImage serviceImage = ServiceImage.builder()
                         .storageName(storageName)
                         .service(service)
@@ -63,16 +63,13 @@ public class ServiceService {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Service "+id+ " not found"));
         serviceRepository.delete(service);
-        service.getServiceImages().forEach(
-                image -> fileStorageService.deleteFile(image.getStorageName())
-        );
     }
 
     public void addImageToService(Long id, MultipartFile image){
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Service "+id+ " not found"));
         if(image != null && !image.isEmpty()){
-            String storageName = fileStorageService.saveFile(image);
+            String storageName = fileStorageService.uploadFileToCloud(image);
             ServiceImage serviceImage = ServiceImage.builder()
                     .storageName(storageName)
                     .service(service)

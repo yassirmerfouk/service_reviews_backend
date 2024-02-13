@@ -22,7 +22,7 @@ public class ServiceController {
 
     private ServiceService serviceService;
 
-    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
+    /*@PreAuthorize("hasAuthority('SCOPE_BUSINESS')")*/
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceResponseDTO addService(
@@ -44,14 +44,14 @@ public class ServiceController {
         return serviceService.getService(id);
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
+    /*@PreAuthorize("hasAuthority('SCOPE_BUSINESS')")*/
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteService(@PathVariable Long id){
         serviceService.deleteService(id);
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
+   /* @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")*/
     @PostMapping(path = "/{id}/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void addImageToService(
@@ -67,7 +67,7 @@ public class ServiceController {
         return serviceService.getServicesByCategoryId(categoryId);
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_BUSINESS')")
+    /*@PreAuthorize("hasAuthority('SCOPE_BUSINESS')")*/
     @GetMapping("/accounts/business/{accountId}")
     @ResponseStatus(HttpStatus.OK)
     public List<ServiceResponseDTO> getServicesByBusinessAccountId(@PathVariable Long accountId){

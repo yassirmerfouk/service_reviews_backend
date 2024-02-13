@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/auth")
+    @GetMapping("/authentication")
     public Authentication authentication(Authentication authentication){
         return authentication;
     }
